@@ -6,7 +6,7 @@ public class StorageWrapper<T> implements IStorage<T> {
 
     protected IStorage<T> storage;
 
-    public StorageWrapper(IStorage<T> storage){
+    public StorageWrapper(IStorage<T> storage) {
         this.storage = storage;
     }
 
@@ -27,12 +27,14 @@ public class StorageWrapper<T> implements IStorage<T> {
 
     @Override
     public void addValue(String key, T value) {
-        storage.addValue(key,value);
+        if (!IsReadOnly()) {
+            storage.addValue(key, value);
+        }
     }
 
     @Override
     public void addValue(String key, T value, int depth) throws IllegalAccessException {
-        storage.addValue(key,value,depth);
+        storage.addValue(key, value, depth);
     }
 
     @Override
@@ -47,7 +49,7 @@ public class StorageWrapper<T> implements IStorage<T> {
 
     @Override
     public void Propagate(String key, T value) {
-        storage.Propagate(key,value);
+        storage.Propagate(key, value);
     }
 
     @Override

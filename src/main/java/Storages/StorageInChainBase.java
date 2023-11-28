@@ -8,7 +8,7 @@ public abstract class StorageInChainBase<T> implements IStorage<T>,Cloneable {
     private IStorage<T> nextStorage;
     private T value;
 
-    protected boolean IsReadOnly = false;
+    protected boolean isReadOnly = false;
 
     public int getExpirationInterval() {
         return expirationInterval;
@@ -17,13 +17,15 @@ public abstract class StorageInChainBase<T> implements IStorage<T>,Cloneable {
 
     @Override
     public boolean IsReadOnly() {
-        return IsReadOnly;
+        return isReadOnly;
     }
 
 
     @Override
     public void Propagate(String key, T value) {
-        this.addValue(key, value);
+        if (!isReadOnly) {
+            this.addValue(key, value);
+        }
         if (this.getNextStorage() != null)
             this.getNextStorage().Propagate(key, value);
     }
@@ -37,7 +39,7 @@ public abstract class StorageInChainBase<T> implements IStorage<T>,Cloneable {
             nextStorage.setNextStorage(storageWrapper);
             nextStorage = storageWrapper;
         }
-        ((StorageInChainBase<T>)nextStorage).IsReadOnly = true;
+        ((StorageInChainBase<T>)nextStorage).isReadOnly = true;
     }
 
     @Override
@@ -55,13 +57,15 @@ public abstract class StorageInChainBase<T> implements IStorage<T>,Cloneable {
         int counter = 1;
 
         while (depth != counter) {
-            if(currentStorage.getNextStorage() == null){
+            if (currentStorage.getNextStorage() == null) {
                 throw new IllegalAccessException("Depth to deep for the chain");
             }
             currentStorage = currentStorage.getNextStorage();
             counter++;
         }
-        currentStorage.addValue(key,value);
+        if (!isReadOnly) {
+            currentStorage.addValue(key, value);
+        }
     }
 
     @Override
