@@ -2,6 +2,8 @@ package Storages;
 
 import Interfaces.IStorage;
 
+import java.io.IOException;
+
 public abstract class StorageInChainBase<T> implements IStorage<T>,Cloneable {
 
     private final int expirationInterval;
@@ -22,7 +24,7 @@ public abstract class StorageInChainBase<T> implements IStorage<T>,Cloneable {
 
 
     @Override
-    public void Propagate(String key, T value) {
+    public void Propagate(String key, T value) throws IOException {
         if (!isReadOnly) {
             this.addValue(key, value);
         }
@@ -52,7 +54,7 @@ public abstract class StorageInChainBase<T> implements IStorage<T>,Cloneable {
         this.nextStorage = nextStorage;
     }
 
-    public void addValue(String key, T value, int depth) throws IllegalAccessException {
+    public void addValue(String key, T value, int depth) throws IllegalAccessException, IOException {
         IStorage<T> currentStorage = this;
         int counter = 1;
 

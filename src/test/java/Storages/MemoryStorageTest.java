@@ -2,6 +2,8 @@ package Storages;
 
 import Interfaces.IStorage;
 import org.junit.jupiter.api.Test;
+
+import java.io.IOException;
 import java.util.NoSuchElementException;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -39,7 +41,7 @@ class MemoryStorageTest {
     }
 
     @Test
-    void GetValueNoDepth() {
+    void GetValueNoDepth() throws IOException {
         String validKey = "VALIDKEY";
         String validValue = "VALIDVALUE";
         IStorage<String> memoryStorage = new MemoryStorage(depthCount, 3);
@@ -49,7 +51,7 @@ class MemoryStorageTest {
     }
 
     @Test
-    void GetValueWithDepth() throws IllegalAccessException {
+    void GetValueWithDepth() throws IllegalAccessException, IOException {
         String validKey = "VALIDKEY";
         String validValue = "VALIDVALUE";
         int validDepth = 5;
@@ -71,15 +73,15 @@ class MemoryStorageTest {
     }
 
     @Test
-    void CheckPropagate() throws IllegalAccessException {
+    void CheckPropagate() throws IllegalAccessException, IOException {
         String validKey = "VALIDKEY";
         String validValue = "VALIDVALUE";
         int validDepth = 3;
         IStorage<String> memoryStorage = new MemoryStorage(depthCount, 3);
         memoryStorage.addValue(validKey,validValue,validDepth);
-        String value = memoryStorage.getValue(validKey);
+        memoryStorage.getValue(validKey);
         IStorage<String> currentStorage = memoryStorage;
-        for(int i = 1; i <= depthCount; i++){
+        for(int i = 1; i < depthCount; i++){
             if(i < validDepth){
                 assertFalse(currentStorage.ValueExist(validKey));
             }else{

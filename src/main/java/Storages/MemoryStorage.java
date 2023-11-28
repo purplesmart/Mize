@@ -1,6 +1,8 @@
 package Storages;
 
 import Entities.DataEntity;
+
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -29,7 +31,7 @@ public class MemoryStorage extends StorageInChainBase<String> {
     }
 
 
-    public String getValue(String key) {
+    public String getValue(String key) throws IOException {
         DataEntity<String> content = null;
         do {
             if (dataSource.containsKey(key)) {

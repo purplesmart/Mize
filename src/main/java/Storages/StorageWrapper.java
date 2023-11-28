@@ -2,6 +2,8 @@ package Storages;
 
 import Interfaces.IStorage;
 
+import java.io.IOException;
+
 public class StorageWrapper<T> implements IStorage<T> {
 
     protected IStorage<T> storage;
@@ -11,7 +13,7 @@ public class StorageWrapper<T> implements IStorage<T> {
     }
 
     @Override
-    public T getValue(String key) {
+    public T getValue(String key) throws IOException {
         return storage.getValue(key);
     }
 
@@ -26,14 +28,14 @@ public class StorageWrapper<T> implements IStorage<T> {
     }
 
     @Override
-    public void addValue(String key, T value) {
+    public void addValue(String key, T value) throws IOException {
         if (!IsReadOnly()) {
             storage.addValue(key, value);
         }
     }
 
     @Override
-    public void addValue(String key, T value, int depth) throws IllegalAccessException {
+    public void addValue(String key, T value, int depth) throws IllegalAccessException, IOException {
         storage.addValue(key, value, depth);
     }
 
@@ -48,7 +50,7 @@ public class StorageWrapper<T> implements IStorage<T> {
     }
 
     @Override
-    public void Propagate(String key, T value) {
+    public void Propagate(String key, T value) throws IOException {
         storage.Propagate(key, value);
     }
 

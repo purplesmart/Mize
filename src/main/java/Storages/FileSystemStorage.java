@@ -1,10 +1,14 @@
 package Storages;
 
 import Entities.DataEntity;
+import com.google.gson.*;
+
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class FileSystemStorage extends StorageInChainBase<Object> {
+public class FileSystemStorage extends StorageInChainBase<JsonObject> {
     String folderPath = "c:/somefolder";
 
     private Map<String, DataEntity<String>> dataSource;
@@ -14,6 +18,8 @@ public class FileSystemStorage extends StorageInChainBase<Object> {
         return dataSource.containsKey(key);
     }
 
+    private Gson gson;
+
     public FileSystemStorage(int depth, int expirationInterval) {
         super(depth, expirationInterval);
         Init();
@@ -22,10 +28,11 @@ public class FileSystemStorage extends StorageInChainBase<Object> {
     @Override
     public void Init() {
         dataSource= new HashMap<>();
+        gson = new GsonBuilder().setPrettyPrinting().create();
     }
 
 
-    public Object getValue(String key) {
+    public JsonObject getValue(String key) {
         String path = folderPath + "/" + key + ".json";
         if (dataSource.containsKey(key)) {
             DataEntity<String> item = dataSource.get(key);
@@ -36,13 +43,12 @@ public class FileSystemStorage extends StorageInChainBase<Object> {
         return null;
     }
 
-    private Object loadJSONFile(String filePath) {
-        // load JSON from file system
-        return null;
+    private JsonObject loadJSONFile(String filePath) {
+        return gson.fromJson(filePath, JsonObject.class);
     }
 
 
-    public void addValue(String key, Object value) {
+    public void addValue(String key, JsonObject value) throws IOException {
         if (dataSource.containsKey(key)) {
             String filePath = dataSource.get(key).getValue();
             deleteFile(filePath);
@@ -55,10 +61,14 @@ public class FileSystemStorage extends StorageInChainBase<Object> {
         // Deleting file
     }
 
-    private String saveFileReturnFullPath(String key, Object value) {
+    private String saveFileReturnFullPath(String key, JsonObject object) throws IOException {
         //Save
         String path = folderPath + "/" + key + ".json";
-        // file save ( path )
+        String jsonObject = gson.toJson(object);
+        try(FileWriter fileWriter = new FileWriter(path)){
+            // Write JSON data to the file
+            gson.toJson(jsonObject, fileWriter);
+        }
         return path;
     }
 
