@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.UUID;
 
 public class MemoryStorage extends StorageInChainBase<String> {
     private Map<String, DataEntity<String>> dataSource;
@@ -22,7 +23,8 @@ public class MemoryStorage extends StorageInChainBase<String> {
 
     @Override
     public void Init() {
-        dataSource= new HashMap<>();
+
+        dataSource = new HashMap<>();
     }
 
     @Override
@@ -39,7 +41,7 @@ public class MemoryStorage extends StorageInChainBase<String> {
             }
             if (content != null && !content.IsExpired()) {
                 String value = content.getValue();
-                Propagate(key,value);
+                Propagate(key, value);
                 return value;
             }
             if (this.getNextStorage() != null) {

@@ -4,11 +4,6 @@ import java.time.LocalDateTime;
 
 public class DataEntity<T> {
 
-    public DataEntity(String key, T value) {
-        this.key = key;
-        this.value = value;
-    }
-
     public DataEntity(String key, T value, int expirationInterval) {
         this.key = key;
         this.value = value;

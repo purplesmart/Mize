@@ -9,10 +9,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class MemoryStorageTest {
     int depthCount = 5;
+    int expirationInterval = 3;
     @Test
     void StorageChainLength() {
         int count = 0;
-        IStorage memoryStorage = new MemoryStorage(depthCount, 3);
+        IStorage memoryStorage = new MemoryStorage(depthCount, expirationInterval);
         while (memoryStorage != null) {
             memoryStorage = memoryStorage.getNextStorage();
             count++;
@@ -23,7 +24,7 @@ class MemoryStorageTest {
     @Test
     void StorageInChainNotReadOnly() {
 
-        IStorage memoryStorage = new MemoryStorage(depthCount, 3);
+        IStorage memoryStorage = new MemoryStorage(depthCount, expirationInterval);
         while (memoryStorage.getNextStorage() != null){
             assertFalse(memoryStorage.IsReadOnly());
             memoryStorage = memoryStorage.getNextStorage();
@@ -35,7 +36,7 @@ class MemoryStorageTest {
     void GetNotValidValue() {
         String notValidKey = "NONVALIDKEY";
         assertThrows(NoSuchElementException.class, () -> {
-            IStorage memoryStorage = new MemoryStorage(depthCount, 3);
+            IStorage memoryStorage = new MemoryStorage(depthCount, expirationInterval);
             memoryStorage.getValue(notValidKey);
         });
     }
@@ -44,7 +45,7 @@ class MemoryStorageTest {
     void GetValueNoDepth() throws IOException {
         String validKey = "VALIDKEY";
         String validValue = "VALIDVALUE";
-        IStorage<String> memoryStorage = new MemoryStorage(depthCount, 3);
+        IStorage<String> memoryStorage = new MemoryStorage(depthCount, expirationInterval);
         memoryStorage.addValue(validKey,validValue);
         String value = memoryStorage.getValue(validKey);
         assertEquals(validValue, value);
@@ -55,7 +56,7 @@ class MemoryStorageTest {
         String validKey = "VALIDKEY";
         String validValue = "VALIDVALUE";
         int validDepth = 5;
-        IStorage<String> memoryStorage = new MemoryStorage(depthCount, 3);
+        IStorage<String> memoryStorage = new MemoryStorage(depthCount, expirationInterval);
         memoryStorage.addValue(validKey,validValue,validDepth);
         String value = memoryStorage.getValue(validKey);
         assertEquals(validValue, value);
@@ -67,7 +68,7 @@ class MemoryStorageTest {
             String validKey = "VALIDKEY";
             String validValue = "VALIDVALUE";
             int validDepth = 6;
-            IStorage<String> memoryStorage = new MemoryStorage(depthCount, 3);
+            IStorage<String> memoryStorage = new MemoryStorage(depthCount, expirationInterval);
             memoryStorage.addValue(validKey,validValue,validDepth);
         });
     }
@@ -77,7 +78,7 @@ class MemoryStorageTest {
         String validKey = "VALIDKEY";
         String validValue = "VALIDVALUE";
         int validDepth = 3;
-        IStorage<String> memoryStorage = new MemoryStorage(depthCount, 3);
+        IStorage<String> memoryStorage = new MemoryStorage(depthCount, expirationInterval);
         memoryStorage.addValue(validKey,validValue,validDepth);
         memoryStorage.getValue(validKey);
         IStorage<String> currentStorage = memoryStorage;

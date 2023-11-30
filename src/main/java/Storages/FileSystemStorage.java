@@ -1,15 +1,15 @@
 package Storages;
 
-import Entities.DataEntity;
+import Entities.*;
 import com.google.gson.*;
+import java.io.*;
+import java.util.*;
+import java.util.UUID;
 
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
-public class FileSystemStorage extends StorageInChainBase<JsonObject> {
-    String folderPath = "c:/somefolder";
+public class FileSystemStorage extends StorageInChainBase<JsonDumb> {
+    private String folderPath;
+    private UUID uniqueID;
+    String filePathMize;
 
     private Map<String, DataEntity<String>> dataSource;
 
@@ -27,49 +27,57 @@ public class FileSystemStorage extends StorageInChainBase<JsonObject> {
 
     @Override
     public void Init() {
-        dataSource= new HashMap<>();
+        dataSource = new HashMap<>();
         gson = new GsonBuilder().setPrettyPrinting().create();
+        folderPath = System.getProperty("user.home");
+        uniqueID = UUID.randomUUID();
+        filePathMize = "MizeFiles";
     }
 
 
-    public JsonObject getValue(String key) {
-        String path = folderPath + "/" + key + ".json";
-        if (dataSource.containsKey(key)) {
-            DataEntity<String> item = dataSource.get(key);
-            if (!item.IsExpired()) {
-                return loadJSONFile(item.getValue());
+    public JsonDumb getValue(String key) throws IOException {
+        DataEntity<String> dataEntity = null;
+        do {
+            if (dataSource.containsKey(key)) {
+                dataEntity = dataSource.get(key);
             }
+            if (dataEntity != null && !dataEntity.IsExpired()) {
+                JsonDumb jsonDumb = loadJSONFile(dataEntity.getValue());
+                Propagate(key, jsonDumb);
+                return jsonDumb;
+            }
+            if (this.getNextStorage() != null) {
+                return this.getNextStorage().getValue(key);
+            }
+        } while (this.getNextStorage() != null);
+        throw new NoSuchElementException("No result for key: " + key);
+    }
+
+    private JsonDumb loadJSONFile(String filePath) throws IOException {
+        try (Reader reader = new FileReader(filePath)) {
+            JsonDumb jsonDumb = gson.fromJson(reader, JsonDumb.class);
+            return jsonDumb;
         }
-        return null;
     }
 
-    private JsonObject loadJSONFile(String filePath) {
-        return gson.fromJson(filePath, JsonObject.class);
-    }
-
-
-    public void addValue(String key, JsonObject value) throws IOException {
+    public void addValue(String key, JsonDumb value) throws IOException {
+        String filePath;
         if (dataSource.containsKey(key)) {
-            String filePath = dataSource.get(key).getValue();
-            deleteFile(filePath);
+            DataEntity<String> dataEntity = dataSource.get(key);
+            filePath = dataEntity.getValue();
             dataSource.remove(key);
+        } else {
+            filePath = saveFileReturnFullPath(key, value);
         }
-        dataSource.put(key, new DataEntity<>(key, saveFileReturnFullPath(key, value)));
+        dataSource.put(key, new DataEntity<>(key, filePath, getExpirationInterval()));
     }
 
-    private void deleteFile(String path){
-        // Deleting file
-    }
-
-    private String saveFileReturnFullPath(String key, JsonObject object) throws IOException {
-        //Save
-        String path = folderPath + "/" + key + ".json";
-        String jsonObject = gson.toJson(object);
-        try(FileWriter fileWriter = new FileWriter(path)){
-            // Write JSON data to the file
-            gson.toJson(jsonObject, fileWriter);
+    private String saveFileReturnFullPath(String key, JsonDumb jsonDumb) throws IOException {
+        String path = folderPath + "/" + filePathMize + "/" + uniqueID.toString() + key + ".json";
+        Gson gson = new Gson();
+        try (FileWriter fileWriter = new FileWriter(path)) {
+            gson.toJson(jsonDumb, fileWriter);
         }
         return path;
     }
-
 }
