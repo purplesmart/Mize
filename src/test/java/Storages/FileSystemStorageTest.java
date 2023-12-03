@@ -2,9 +2,6 @@ package Storages;
 
 import Entities.JsonDumb;
 import Interfaces.IStorage;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -20,7 +17,7 @@ class FileSystemStorageTest {
     @Test
     void StorageChainLength() {
         int count = 0;
-        IStorage fileSystemStorage = new FileSystemStorage(depthCount, expirationInterval);
+        IStorage<JsonDumb> fileSystemStorage = new FileSystemStorage(depthCount, expirationInterval);
         while (fileSystemStorage != null) {
             fileSystemStorage = fileSystemStorage.getNextStorage();
             count++;
@@ -31,7 +28,7 @@ class FileSystemStorageTest {
     @Test
     void StorageInChainNotReadOnly() {
 
-        IStorage fileSystemStorage = new FileSystemStorage(depthCount, expirationInterval);
+        IStorage<JsonDumb> fileSystemStorage = new FileSystemStorage(depthCount, expirationInterval);
         while (fileSystemStorage.getNextStorage() != null) {
             assertFalse(fileSystemStorage.IsReadOnly());
             fileSystemStorage = fileSystemStorage.getNextStorage();
@@ -43,7 +40,7 @@ class FileSystemStorageTest {
     void GetNotValidValue() {
         String notValidKey = "NONVALIDKEY";
         assertThrows(NoSuchElementException.class, () -> {
-            IStorage fileSystemStorage = new FileSystemStorage(depthCount, expirationInterval);
+            IStorage<JsonDumb> fileSystemStorage = new FileSystemStorage(depthCount, expirationInterval);
             fileSystemStorage.getValue(notValidKey);
         });
     }

@@ -1,7 +1,6 @@
 package Storages;
 
 import Interfaces.IStorage;
-
 import java.io.IOException;
 
 public class StorageWrapper<T> implements IStorage<T> {

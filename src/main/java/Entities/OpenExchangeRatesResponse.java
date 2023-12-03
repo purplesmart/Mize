@@ -1,7 +1,5 @@
 package Entities;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.List;
 
 public class OpenExchangeRatesResponse {
@@ -9,6 +7,7 @@ public class OpenExchangeRatesResponse {
     private String license;
     private Long timestamp;
     private String base;
+    private List<Double> rates;
 
     public String getDisclaimer() {
         return disclaimer;
@@ -49,8 +48,4 @@ public class OpenExchangeRatesResponse {
     public void setRates(List<Double> rates) {
         this.rates = rates;
     }
-
-    private List<Double> rates;
-
-
 }

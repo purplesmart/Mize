@@ -1,7 +1,6 @@
 package Storages;
 
 import Interfaces.IStorage;
-
 import java.io.IOException;
 
 public abstract class StorageInChainBase<T> implements IStorage<T>,Cloneable {

@@ -1,12 +1,9 @@
 package Storages;
 
 import Entities.DataEntity;
-
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.UUID;
 
 public class MemoryStorage extends StorageInChainBase<String> {
     private Map<String, DataEntity<String>> dataSource;
