@@ -42,7 +42,7 @@ class MemoryStorageTest {
     }
 
     @Test
-    void GetValueNoDepth() throws IOException {
+    void GetValueNoDepth() throws Exception {
         String validKey = "VALIDKEY";
         String validValue = "VALIDVALUE";
         IStorage<String> memoryStorage = new MemoryStorage(depthCount, expirationInterval);
@@ -52,7 +52,7 @@ class MemoryStorageTest {
     }
 
     @Test
-    void GetValueWithDepth() throws IllegalAccessException, IOException {
+    void GetValueWithDepth() throws Exception {
         String validKey = "VALIDKEY";
         String validValue = "VALIDVALUE";
         int validDepth = 5;
@@ -74,7 +74,7 @@ class MemoryStorageTest {
     }
 
     @Test
-    void CheckPropagate() throws IllegalAccessException, IOException {
+    void CheckPropagate() throws Exception {
         String validKey = "VALIDKEY";
         String validValue = "VALIDVALUE";
         int validDepth = 3;

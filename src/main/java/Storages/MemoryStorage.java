@@ -23,7 +23,6 @@ public class MemoryStorage extends StorageInChainBase<String> {
 
     @Override
     public void Init() {
-
         dataSource = new HashMap<>();
     }
 
@@ -33,7 +32,7 @@ public class MemoryStorage extends StorageInChainBase<String> {
     }
 
 
-    public String getValue(String key) throws IOException {
+    public String getValue(String key) throws Exception {
         DataEntity<String> content = null;
         do {
             if (dataSource.containsKey(key)) {

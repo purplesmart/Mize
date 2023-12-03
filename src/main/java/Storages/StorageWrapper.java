@@ -13,7 +13,7 @@ public class StorageWrapper<T> implements IStorage<T> {
     }
 
     @Override
-    public T getValue(String key) throws IOException {
+    public T getValue(String key) throws Exception {
         return storage.getValue(key);
     }
 
@@ -28,7 +28,7 @@ public class StorageWrapper<T> implements IStorage<T> {
     }
 
     @Override
-    public void addValue(String key, T value) throws IOException {
+    public void addValue(String key, T value) throws IOException, IllegalAccessException {
         if (!IsReadOnly()) {
             storage.addValue(key, value);
         }
@@ -50,12 +50,12 @@ public class StorageWrapper<T> implements IStorage<T> {
     }
 
     @Override
-    public void Propagate(String key, T value) throws IOException {
+    public void Propagate(String key, T value) throws Exception {
         storage.Propagate(key, value);
     }
 
     @Override
-    public boolean ValueExist(String key) {
+    public boolean ValueExist(String key) throws IOException {
         return storage.ValueExist(key);
     }
 

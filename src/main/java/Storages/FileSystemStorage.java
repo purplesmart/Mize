@@ -35,7 +35,7 @@ public class FileSystemStorage extends StorageInChainBase<JsonDumb> {
     }
 
 
-    public JsonDumb getValue(String key) throws IOException {
+    public JsonDumb getValue(String key) throws Exception {
         DataEntity<String> dataEntity = null;
         do {
             if (dataSource.containsKey(key)) {

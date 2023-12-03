@@ -49,7 +49,7 @@ class FileSystemStorageTest {
     }
 
     @Test
-    void GetValueNoDepth() throws IOException {
+    void GetValueNoDepth() throws Exception {
         String validKey = "VALIDKEY";
         JsonDumb jsonDumb= new JsonDumb("DumbName", 16);
         IStorage<JsonDumb> fileSystemStorage = new FileSystemStorage(depthCount, expirationInterval);
@@ -60,7 +60,7 @@ class FileSystemStorageTest {
     }
 
     @Test
-    void GetValueWithDepth() throws IllegalAccessException, IOException {
+    void GetValueWithDepth() throws Exception {
         String validKey = "VALIDKEY";
         JsonDumb jsonDumb= new JsonDumb("DumbName", 16);
         int validDepth = 5;
@@ -83,7 +83,7 @@ class FileSystemStorageTest {
     }
 
     @Test
-    void CheckPropagate() throws IllegalAccessException, IOException {
+    void CheckPropagate() throws Exception {
         String validKey = "VALIDKEY";
         JsonDumb jsonDumb= new JsonDumb("DumbName", 16);
         int validDepth = 3;

@@ -24,7 +24,7 @@ public abstract class StorageInChainBase<T> implements IStorage<T>,Cloneable {
 
 
     @Override
-    public void Propagate(String key, T value) throws IOException {
+    public void Propagate(String key, T value) throws Exception {
         if (!isReadOnly) {
             this.addValue(key, value);
         }
